@@ -39,7 +39,34 @@ Simplemente escribimos en la línea de comandos: **deactivate**
 
 
 
-## Antes de ejecutar los scripts
+## Cambios y scripts del Grupo 5 (TP N° 4 – Redes de Computadoras 3643, UNLaM)
 
-- **Credenciales del controlador:** los scripts usan el usuario `cisco` y la clave `cisco123!`. Si en tu Network Controller creaste otro usuario, cambialos en `01_get-ticket.py` y en `04_tabulate.py`.
-- **Ticket (X-Auth-Token):** `02_get-network-device.py` y `03_get-host.py` traen escrito un ticket de ejemplo que **no va a funcionar** en tu Packet Tracer, porque el controlador genera uno nuevo en cada sesión y vence. Ejecutá primero `01_get-ticket.py`, copiá el ticket que muestra y reemplazalo en el header `X-Auth-Token` de esos dos scripts. `04_tabulate.py` no necesita este paso: pide el ticket solo.
+Grupo 5, comisión 01-1300. Integrantes: Virreira Kevin Santiago.
+
+Estos scripts consumen la API REST del Network Controller de Packet Tracer (puerto 58000) de la red del TP N° 4.
+
+### Contraseñas
+Ningún script lleva la contraseña escrita. Cada uno **la pide por teclado** al ejecutarse (no se ve al escribirla). El usuario del controlador es `cisco`.
+
+### Qué hace cada script (carpeta `src/`)
+| Script | Endpoint | Qué hace |
+|---|---|---|
+| `01_get-ticket.py` | POST /ticket | Pide el ticket de acceso y muestra el estado (201) |
+| `02_get-network-device.py` | GET /network-device | Lista los equipos de red (nombre, plataforma, IP). Pide el ticket por teclado |
+| `03_get-host.py` | GET /host | Lista los hosts (nombre, IP, MAC, interfaz). Pide el ticket por teclado |
+| `04_tabulate.py` | POST /ticket, GET /network-device, GET /host | Muestra equipos y hosts en tablas ordenadas |
+| `05_inventario_csv.py` | POST /ticket, GET /network-device, GET /host | **Script propio.** Arma el inventario de la red, lo guarda en `inventario_dispositivos.csv` e `inventario_hosts.csv`, indica a qué switch está conectado cada host y cuántos equipos están en cada estado (Managed / Wrong credential) |
+
+El router ISP **no** está administrado por el controlador (estado *Wrong credential*): no tiene nombre ni datos en el inventario. Los scripts 02 y 04 se modificaron con `.get()` para no fallar con ese equipo.
+
+### Cómo ejecutarlos en Windows (PowerShell)
+Con Packet Tracer abierto y la API habilitada (Options > Preferences > Miscellaneous > *Enable External Access for Network Controller REST API*):
+```
+python -m venv cisco
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\cisco\Scripts\Activate.ps1
+pip install -r requirements.txt
+python src\01_get-ticket.py
+python src\05_inventario_csv.py
+```
+Los scripts 02 y 03 piden el ticket que muestra el 01
