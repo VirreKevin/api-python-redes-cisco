@@ -41,7 +41,7 @@ Simplemente escribimos en la línea de comandos: **deactivate**
 
 ## Cambios y scripts del Grupo 5 (TP N° 4 – Redes de Computadoras 3643, UNLaM)
 
-Grupo 5, comisión 01-1300. Integrantes: Virreira Kevin Santiago.
+Grupo 5, comisión 01-3600. Integrantes: Virreira Kevin Santiago.
 
 Estos scripts consumen la API REST del Network Controller de Packet Tracer (puerto 58000) de la red del TP N° 4.
 
